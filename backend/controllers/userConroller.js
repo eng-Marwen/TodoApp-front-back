@@ -40,19 +40,19 @@ const createTodo = async (req, res) => {
 };
 const deleteTodoByIndex = async (req, res) => {
   try {
-    const idx = req.params.id;
+    const idx = req.params.index;
     if (!idx) throw new Error("index is missed", 401);
-    const todo = await Todo.findOne({ idx });
-    if (!todo) throw new HttpError("index is not found", 404);
+    const deletedTodo = await Todo.findOneAndDelete({ idx });
+    if (!deletedTodo) throw new HttpError("index is not found", 404);
+    res.status(200).json({
+      status:"success",
+      data:deletedTodo
+    });
   } catch (error) {
     res.status(error.status).json({
-      status:"failed",
-      message:error.message
+      status: "failed",
+      message: error.message,
     });
   }
 };
-export {
-   createTodo,
-   getAllTodos,
-   deleteTodoByIndex 
-};
+export { createTodo, deleteTodoByIndex, getAllTodos };

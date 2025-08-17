@@ -4,6 +4,6 @@ import { getAllTodos,createTodo,deleteTodoByIndex } from "../controllers/userCon
 const router=express.Router();
 router.get('/',getAllTodos);
 router.post('/create',createTodo);
-router.delete('/:idx',deleteTodoByIndex);
+router.delete('/:index',deleteTodoByIndex);
 
 export default router;
