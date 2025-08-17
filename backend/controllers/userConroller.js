@@ -1,15 +1,16 @@
 import { uuid } from "uuidv4";
+import { HttpError } from "../errorsHandler/customError.js";
 import Todo from "../models/todoModel.js";
 
 const getAllTodos = async (req, res) => {
   try {
     const todos = await Todo.find().lean();
     res.status(200).json({
-      status:"success",
-      data:{
-        numberOfTodos:todos.length,
-        todos
-      }
+      status: "success",
+      data: {
+        numberOfTodos: todos.length,
+        todos,
+      },
     });
   } catch (err) {
     console.log(err.message);
@@ -33,8 +34,25 @@ const createTodo = async (req, res) => {
     console.log(err.message);
     res.status(409).json({
       status: "failed",
-      message:err.message
+      message: err.message,
     });
   }
 };
-export { createTodo, getAllTodos };
+const deleteTodoByIndex = async (req, res) => {
+  try {
+    const idx = req.params.id;
+    if (!idx) throw new Error("index is missed", 401);
+    const todo = await Todo.findOne({ idx });
+    if (!todo) throw new HttpError("index is not found", 404);
+  } catch (error) {
+    res.status(error.status).json({
+      status:"failed",
+      message:error.message
+    });
+  }
+};
+export {
+   createTodo,
+   getAllTodos,
+   deleteTodoByIndex 
+};
