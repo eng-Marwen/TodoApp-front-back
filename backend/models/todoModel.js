@@ -1,23 +1,17 @@
 import mongoose from "mongoose";
-import { uuid } from "uuidv4";
 
 const todoSchema = new mongoose.Schema({
-  name: {
+  title: {
     type: String,
     required: [true, "Todo name is required"], // cannot be empty
     trim: true, // removes leading/trailing spaces
     minlength: [1, "Todo name cannot be empty"], // ensures at least 1 char
-    unique: true,
+    unique: true
   },
   completed: {
     type: Boolean,
-    default: false,
-  },
-  idx: {
-    type: String,
-    default: uuid,
-    unique: true,
-  },
+    default: false
+  }
 });
 
 const Todo = mongoose.model("Todo", todoSchema, "todos");

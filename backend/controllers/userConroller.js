@@ -1,4 +1,3 @@
-import { uuid } from "uuidv4";
 import { HttpError } from "../errorsHandler/customError.js";
 import Todo from "../models/todoModel.js";
 
@@ -18,13 +17,12 @@ const getAllTodos = async (req, res) => {
 };
 const createTodo = async (req, res) => {
   try {
-    const { name } = req.body;
-    if (!name) throw new Error("no todo to add");
-    const todoExists = await Todo.findOne({ name: name }).lean();
+    const { title } = req.body;
+    if (!title) throw new Error("no todo to add");
+    const todoExists = await Todo.findOne({ title: title }).lean();
     if (todoExists) throw new Error("todo is already existed");
     const todo = await Todo.create({
-      name,
-      uuid: uuid(),
+      title:title
     });
     res.status(200).json({
       status: "success",
@@ -40,10 +38,10 @@ const createTodo = async (req, res) => {
 };
 const deleteTodoByIndex = async (req, res) => {
   try {
-    const idx = req.params.index;
-    if (!idx) throw new Error("index is missed", 401);
-    const deletedTodo = await Todo.findOneAndDelete({ idx });
-    if (!deletedTodo) throw new HttpError("index is not found", 404);
+    const title = req.params.title;
+    if (!title) throw new Error("index is missed", 401);
+    const deletedTodo = await Todo.findOneAndDelete({ title });
+    if (!deletedTodo) throw new HttpError("title is not found", 404);
     res.status(200).json({
       status:"success",
       data:deletedTodo
